@@ -23,8 +23,10 @@ build/
 .ipynb_checkpoints/
 *.ipynb_checkpoints
 
-# ── Eval outputs ─────────────────────────────────────────────────────────────
+# ── Eval outputs (auto-generated, change every run) ──────────────────────────
 results.json
+old_results.json
+checkpoint.json
 
 # ── OS ────────────────────────────────────────────────────────────────────────
 .DS_Store
