@@ -1,0 +1,32 @@
+[
+  {
+    "id": "g001",
+    "metric_focus": "faithfulness",
+    "user_input": "What is TechNest's return policy?",
+    "reference": "TechNest accepts returns within 30 days of purchase. Items must be in original packaging with all accessories. Customers pay return shipping unless the item is defective. Refunds are processed in 5 to 7 business days."
+  },
+  {
+    "id": "g002",
+    "metric_focus": "answer_relevancy",
+    "user_input": "What are the RAM and storage specs of the ProBook X1?",
+    "reference": "The ProBook X1 has 16GB DDR5 RAM and a 512GB NVMe SSD."
+  },
+  {
+    "id": "g003",
+    "metric_focus": "context_precision",
+    "user_input": "How long is the battery life on the SoundPods Pro?",
+    "reference": "The SoundPods Pro offer 8 hours of playback per charge and an additional 24 hours from the charging case, giving a total of 32 hours."
+  },
+  {
+    "id": "g004",
+    "metric_focus": "context_recall",
+    "user_input": "What are TechNest's shipping options and how long do returns take to process?",
+    "reference": "TechNest offers free standard shipping on orders over $50 (3 to 5 business days) and expedited shipping for $9.99 (1 to 2 business days). Returns are accepted within 30 days and refunds are processed in 5 to 7 business days after the item is received."
+  },
+  {
+    "id": "g005",
+    "metric_focus": "answer_correctness",
+    "user_input": "What is the price of the PixelPhone 15?",
+    "reference": "The TechNest PixelPhone 15 is priced at $899."
+  }
+]

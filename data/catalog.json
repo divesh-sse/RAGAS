@@ -1,0 +1,92 @@
+[
+  {
+    "id": "prod_001",
+    "category": "product",
+    "title": "ProBook X1 Laptop",
+    "content": "The TechNest ProBook X1 is a 14-inch laptop featuring an Intel Core i7-13th Gen processor, 16GB DDR5 RAM, and a 512GB NVMe SSD. It has a battery life of 12 hours, weighs 1.4kg, and comes with a backlit keyboard. Price: $1,299. Includes a 2-year manufacturer warranty."
+  },
+  {
+    "id": "prod_002",
+    "category": "product",
+    "title": "PixelPhone 15",
+    "content": "The TechNest PixelPhone 15 is a 6.7-inch AMOLED smartphone with a 50MP triple camera system, 8GB RAM, 256GB storage, and a 5,000mAh battery supporting 65W fast charging. Available in Midnight Black and Arctic White. Price: $899. Includes a 1-year warranty."
+  },
+  {
+    "id": "prod_003",
+    "category": "product",
+    "title": "SoundPods Pro",
+    "content": "The TechNest SoundPods Pro are true wireless earbuds with active noise cancellation (ANC), 8 hours of playback per charge plus 24 hours with the case, and IPX4 water resistance. They connect via Bluetooth 5.3 and support multipoint pairing with two devices simultaneously. Price: $149."
+  },
+  {
+    "id": "prod_004",
+    "category": "product",
+    "title": "UltraTab S2 Tablet",
+    "content": "The TechNest UltraTab S2 is a 11-inch tablet powered by a Snapdragon 870 processor with 8GB RAM and 128GB storage expandable via microSD. It features a 120Hz display, a 7,500mAh battery, and supports the TechNest Stylus Pen sold separately. Price: $549. Includes a 1-year warranty."
+  },
+  {
+    "id": "prod_005",
+    "category": "product",
+    "title": "SmartWatch X",
+    "content": "The TechNest SmartWatch X features continuous heart rate monitoring, SpO2 tracking, GPS, and 7-day battery life. It is water-resistant up to 50 metres. Compatible with both Android and iOS. Price: $299. Includes a 1-year warranty and a free extra silicone band."
+  },
+  {
+    "id": "prod_006",
+    "category": "product",
+    "title": "ProCam 4K Action Camera",
+    "content": "The TechNest ProCam 4K shoots 4K video at 60fps and 20MP photos. It is waterproof up to 10 metres without a case, has built-in image stabilisation (EIS), and includes a touch screen. Battery life is 90 minutes of 4K recording. Price: $229. Includes a 1-year warranty."
+  },
+  {
+    "id": "prod_007",
+    "category": "product",
+    "title": "BassBuds Max Headphones",
+    "content": "The TechNest BassBuds Max are over-ear wireless headphones with 40-hour battery life, hybrid active noise cancellation, and a premium 40mm driver for deep bass. They fold flat for travel and include a carrying case. Price: $199. Compatible with all Bluetooth devices."
+  },
+  {
+    "id": "prod_008",
+    "category": "product",
+    "title": "SoundBar 360",
+    "content": "The TechNest SoundBar 360 is a 2.1 soundbar with a 120W output, built-in subwoofer, Dolby Atmos support, and HDMI ARC connectivity. It also supports Bluetooth streaming and has an optical audio input. Dimensions: 90cm wide. Price: $349. Includes a 2-year warranty."
+  },
+  {
+    "id": "policy_001",
+    "category": "policy",
+    "title": "Return Policy",
+    "content": "TechNest accepts returns within 30 days of the original purchase date. Items must be in their original packaging with all accessories included. Customers are responsible for return shipping costs unless the item arrives defective or damaged. Refunds are processed within 5 to 7 business days of receiving the returned item. Digital downloads and opened software are non-refundable."
+  },
+  {
+    "id": "policy_002",
+    "category": "policy",
+    "title": "Shipping Policy",
+    "content": "TechNest offers free standard shipping on all orders over $50 within the continental US. Standard shipping takes 3 to 5 business days. Expedited shipping (1 to 2 business days) is available for $9.99. Same-day delivery is available in select cities for $19.99. Orders placed before 2pm local time are dispatched the same day."
+  },
+  {
+    "id": "policy_003",
+    "category": "policy",
+    "title": "Warranty Policy",
+    "content": "All TechNest products include a minimum 1-year manufacturer warranty covering defects in materials and workmanship. The ProBook X1 and SoundBar 360 include a 2-year warranty. Warranty does not cover physical damage, water damage (unless the product is rated waterproof), or damage from unauthorised modifications. To make a warranty claim, contact support@technest.com with your order number and a description of the issue."
+  },
+  {
+    "id": "policy_004",
+    "category": "policy",
+    "title": "Payment Policy",
+    "content": "TechNest accepts Visa, Mastercard, American Express, PayPal, and Apple Pay. All transactions are encrypted using 256-bit SSL. Buy Now Pay Later is available via Klarna for orders over $100, with 0% interest for 3 monthly instalments. TechNest does not store full card details — payments are processed securely by Stripe."
+  },
+  {
+    "id": "faq_001",
+    "category": "faq",
+    "title": "Order Tracking",
+    "content": "To track your order, visit technest.com/orders and enter your order number and email address. A shipping confirmation email with a tracking link is sent within 24 hours of dispatch. If you have not received your tracking email after 48 hours, check your spam folder or contact support@technest.com."
+  },
+  {
+    "id": "faq_002",
+    "category": "faq",
+    "title": "International Shipping",
+    "content": "TechNest ships to over 40 countries. International shipping rates start at $14.99 and delivery takes 7 to 14 business days. Import duties and taxes are the responsibility of the customer and are not included in the product price. Free shipping promotions apply to US orders only."
+  },
+  {
+    "id": "faq_003",
+    "category": "faq",
+    "title": "Bulk and Business Orders",
+    "content": "TechNest offers volume discounts for businesses purchasing 10 or more units of any single product. Discounts range from 10% for 10 to 49 units up to 25% for 100 or more units. Contact business@technest.com with your requirements for a custom quote. A dedicated account manager is assigned for orders over $10,000."
+  }
+]
