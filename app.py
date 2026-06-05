@@ -102,20 +102,53 @@ st.caption(
 
 # ── Session state defaults ─────────────────────────────────────────────────────
 for key, default in {
-    "enriched": None,
-    "scores": {},        # dict keyed by experiment name, filled incrementally
-    "errors": {},        # dict keyed by experiment name → list of error dicts
-    "results": None,
+    # BYOK — pre-filled from .env if present locally, blank on Streamlit Cloud
+    "groq_key":  os.getenv("GROQ_API_KEY", ""),
+    "judge_key": os.getenv("JUDGE_GROQ", ""),
+    # Pipeline state
+    "enriched":    None,
+    "scores":      {},
+    "errors":      {},
+    "results":     None,
     "phase1_done": False,
     "phase2_done": False,
 }.items():
     if key not in st.session_state:
         st.session_state[key] = default
 
-# ── FIX 3: Sidebar — checkpoint restore ───────────────────────────────────────
-# If the browser disconnected mid-run, the checkpoint file on disk still has
-# the partial results. The user can restore without re-running from scratch.
+# ── Sidebar ────────────────────────────────────────────────────────────────────
 with st.sidebar:
+
+    # ── API Keys (Bring Your Own Keys) ────────────────────────────────────────
+    st.header("🔑 API Keys")
+    st.caption("Keys are stored only in your browser session — never saved to disk.")
+
+    groq_input = st.text_input(
+        "GROQ_API_KEY",
+        value=st.session_state.groq_key,
+        type="password",
+        placeholder="gsk_…",
+        help="Used for RAG generation (llama-3.3-70b-versatile). Free key at console.groq.com.",
+    )
+    judge_input = st.text_input(
+        "JUDGE_GROQ *(optional)*",
+        value=st.session_state.judge_key,
+        type="password",
+        placeholder="gsk_… (falls back to GROQ_API_KEY)",
+        help="Used for RAGAS evaluation (llama-3.1-8b-instant). Keeping it separate means eval runs never exhaust your main key.",
+    )
+
+    st.session_state.groq_key  = groq_input
+    st.session_state.judge_key = judge_input or groq_input  # fallback if blank
+
+    if st.session_state.groq_key:
+        st.success("✅ Keys loaded")
+    else:
+        st.warning("Enter your GROQ_API_KEY to run the pipeline.")
+
+    st.divider()
+
+    # ── Session / Checkpoint ──────────────────────────────────────────────────
     st.header("Session")
 
     checkpoint = load_checkpoint()
@@ -128,9 +161,9 @@ with st.sidebar:
             + (f" ({', '.join(completed)})" if completed else "")
         )
         if st.button("🔄 Restore from checkpoint", use_container_width=True):
-            st.session_state.enriched = checkpoint.get("enriched")
-            st.session_state.scores = checkpoint.get("scores", {})
-            st.session_state.errors = checkpoint.get("errors", {})
+            st.session_state.enriched    = checkpoint.get("enriched")
+            st.session_state.scores      = checkpoint.get("scores", {})
+            st.session_state.errors      = checkpoint.get("errors", {})
             st.session_state.phase1_done = checkpoint.get("phase1_done", False)
             st.session_state.phase2_done = checkpoint.get("phase2_done", False)
             if st.session_state.phase2_done and st.session_state.enriched:
@@ -149,8 +182,8 @@ with st.sidebar:
     if checkpoint and st.button("🗑️ Clear checkpoint", use_container_width=True):
         if os.path.exists(CHECKPOINT_PATH):
             os.remove(CHECKPOINT_PATH)
-        for key in ["enriched", "scores", "errors", "results", "phase1_done", "phase2_done"]:
-            st.session_state[key] = {} if key in ("scores", "errors") else (None if key not in ("phase1_done", "phase2_done") else False)
+        for k in ["enriched", "scores", "errors", "results", "phase1_done", "phase2_done"]:
+            st.session_state[k] = {} if k in ("scores", "errors") else (None if k not in ("phase1_done", "phase2_done") else False)
         st.rerun()
 
 # ── Tabs ───────────────────────────────────────────────────────────────────────
@@ -215,8 +248,8 @@ with tab_goldens:
 with tab_pipeline:
     st.subheader("Evaluation Pipeline")
 
-    if not GROQ_API_KEY:
-        st.error("⚠️  GROQ_API_KEY not found in .env — please add it and restart.")
+    if not st.session_state.groq_key:
+        st.error("⚠️  No GROQ_API_KEY — enter it in the sidebar to continue.")
         st.stop()
 
     # ── Phase 1 ───────────────────────────────────────────────────────────────
@@ -228,7 +261,7 @@ with tab_pipeline:
 
     if st.button("▶ Run Phase 1 — Generate RAG Responses", type="primary"):
         retriever, catalog = get_retriever()
-        generator = Generator(api_key=GROQ_API_KEY)
+        generator = Generator(api_key=st.session_state.groq_key)
         goldens = load_goldens()
 
         progress = st.progress(0, text="Starting…")
@@ -300,7 +333,7 @@ with tab_pipeline:
 
         if remaining and st.button(btn_label, type="primary"):
             enriched = st.session_state.enriched
-            judge_llm = build_judge(JUDGE_GROQ)
+            judge_llm = build_judge(st.session_state.judge_key)
             ragas_emb = get_ragas_embeddings()
 
             total_experiments = len(EXPERIMENTS)
