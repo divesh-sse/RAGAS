@@ -321,7 +321,19 @@ The Results tab no longer waits for all 5 experiments to finish. It shows whatev
 DMT delete it/
 │
 ├── 📓 evals.ipynb              ← Part 1: learn RAGAS metrics with mock data
-├── 🎛️  app.py                  ← Part 2: Streamlit demo (main entry point)
+├── 🎛️  app.py                  ← Part 2: minimal entrypoint (~35 lines), wires ui/ together
+│
+├── ui/                        ← Streamlit UI layer (all st.* calls live here)
+│   ├── state.py               ← init_session_state() — defaults + load_dotenv()
+│   ├── sidebar.py             ← render_sidebar() — BYOK keys + checkpoint restore/clear
+│   ├── cache.py               ← @st.cache_resource wrappers (catalog, retriever, embeddings)
+│   ├── async_utils.py         ← run() — ThreadPoolExecutor wrapper for async coroutines
+│   ├── checkpoint.py          ← save_checkpoint(), load_checkpoint(), path constants
+│   └── tabs/
+│       ├── catalog.py         ← render_catalog_tab()
+│       ├── goldens.py         ← render_goldens_tab()
+│       ├── pipeline.py        ← render_pipeline_tab() — Phase 1 + Phase 2 runner
+│       └── results.py         ← render_results_tab() — averages, table, download
 │
 ├── data/
 │   └── catalog.json           ← 15 TechNest entries (products + policies + FAQs)
@@ -363,22 +375,25 @@ DMT delete it/
 
 ```mermaid
 flowchart LR
-    app([app.py\nStreamlit UI\n+ checkpoint logic])
+    app([app.py\nthin entrypoint])
 
-    app --> loader[rag/loader.py\nload JSON files]
-    app --> retriever[rag/retriever.py\nGemini embeddings\ncosine similarity]
-    app --> generator[rag/generator.py\nGroq generation]
-    app --> runner[evals/runner.py\nPhase 1 orchestration]
-    app --> metrics[evals/metrics.py\nRАGAS scoring\nrate limit + error handling]
-    app --> reporter[evals/reporter.py\nbuild + save results]
+    app --> state[ui/state.py\nsession defaults]
+    app --> sidebar[ui/sidebar.py\nBYOK keys\ncheckpoint UI]
+    app --> tabs[ui/tabs/\ncatalog · goldens\npipeline · results]
 
-    loader --> retriever
-    loader --> runner
-    runner --> generator
-    runner --> retriever
-    metrics --> reporter
+    tabs --> cache[ui/cache.py\ncached retriever\n+ embeddings]
+    tabs --> autils[ui/async_utils.py\nThreadPoolExecutor\nrun coroutines]
+    tabs --> ckpt[ui/checkpoint.py\nsave · load · paths]
+
+    cache --> loader[rag/loader.py]
+    cache --> retriever[rag/retriever.py\nGemini embeddings]
+    tabs --> generator[rag/generator.py\nGroq generation]
+    tabs --> runner[evals/runner.py\nPhase 1]
+    tabs --> metrics[evals/metrics.py\nRАGAS scoring]
+    tabs --> reporter[evals/reporter.py\nbuild + save results]
 
     style app fill:#f0ad4e,color:#000
+    style tabs fill:#d4edda,color:#000
     style metrics fill:#5bc0de,color:#000
 ```
 
