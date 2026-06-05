@@ -4,11 +4,11 @@ Run with:  streamlit run app.py
 """
 
 import asyncio
+import concurrent.futures
 import json
 import os
 import time
 
-import nest_asyncio
 import pandas as pd
 import streamlit as st
 from dotenv import load_dotenv
@@ -30,24 +30,23 @@ from rag.loader import load_catalog, load_goldens
 from rag.retriever import Retriever
 
 # ── Bootstrap ─────────────────────────────────────────────────────────────────
-# nest_asyncio must be applied before any event loop is created.
-# This makes asyncio.run() work inside Streamlit's own event loop on all
-# platforms including Streamlit Cloud (Linux) and Windows.
-nest_asyncio.apply()
-load_dotenv()
+load_dotenv()  # loads .env when running locally — ignored on Streamlit Cloud
 
-GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
-JUDGE_GROQ = os.getenv("JUDGE_GROQ", GROQ_API_KEY)
 CHECKPOINT_PATH = "checkpoint.json"
 RESULTS_PATH = "results.json"
 
 
-# ── FIX 1: Reliable async runner ──────────────────────────────────────────────
-# The old approach (asyncio.get_event_loop().run_until_complete) breaks on
-# Streamlit Cloud because Streamlit may own the event loop in that thread.
-# asyncio.run() always creates a fresh loop and is safe with nest_asyncio applied.
+# ── Async runner — thread-isolated ────────────────────────────────────────────
+# nest_asyncio.apply() was removed because it patches asyncio globally and
+# breaks Streamlit's internal anyio event loop on Python 3.12+ / 3.14,
+# causing NoEventLoopError even on static file requests.
+#
+# Solution: run our async code in a dedicated worker thread that owns its own
+# fresh event loop. Streamlit's event loop is never touched.
 def _run(coro):
-    return asyncio.run(coro)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+        future = executor.submit(asyncio.run, coro)
+        return future.result(timeout=1800)  # 30-min max for long eval runs
 
 
 # ── FIX 2: Checkpoint helpers ─────────────────────────────────────────────────

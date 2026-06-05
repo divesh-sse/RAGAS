@@ -2,7 +2,7 @@
 streamlit
 python-dotenv==1.2.2
 requests==2.33.1
-nest-asyncio
+nest-asyncio  # used by evals.ipynb notebook only — NOT imported in app.py
 pandas
 
 # --- LANGCHAIN (required by RAGAS internals) ---
