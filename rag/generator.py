@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from openai import AsyncOpenAI
 
 GROQ_BASE_URL = "https://api.groq.com/openai/v1"

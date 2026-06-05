@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """
 RAGAS evaluation with safe rate-limit handling.
 

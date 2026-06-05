@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import asyncio
 from rag.retriever import Retriever
 from rag.generator import Generator
