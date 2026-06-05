@@ -15,7 +15,7 @@ pydantic==2.13.4
 # --- EVALS ---
 ragas
 openai
-sentence-transformers
+sentence-transformers  # notebook + RAGAS eval embeddings only (not used for retrieval in app.py)
 
 # --- OBSERVABILITY ---
 langsmith==0.8.3
@@ -26,3 +26,6 @@ loguru==0.7.3
 # notebook
 
 ipykernel
+
+# embeddings
+langchain-google-genai

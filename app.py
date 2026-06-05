@@ -76,10 +76,15 @@ def load_checkpoint() -> dict | None:
 
 
 # ── Cached heavy objects ───────────────────────────────────────────────────────
-@st.cache_resource(show_spinner="Loading catalog and building embeddings…")
-def get_retriever():
-    catalog = load_catalog()
-    return Retriever(catalog), catalog
+@st.cache_resource(show_spinner="Loading catalog…")
+def get_catalog():
+    return load_catalog()
+
+
+@st.cache_resource(show_spinner="Embedding catalog via Gemini API…")
+def get_retriever(gemini_key: str):
+    catalog = get_catalog()
+    return Retriever(catalog, api_key=gemini_key)
 
 
 @st.cache_resource(show_spinner="Loading RAGAS embeddings (sentence-transformers)…")
@@ -103,8 +108,9 @@ st.caption(
 # ── Session state defaults ─────────────────────────────────────────────────────
 for key, default in {
     # BYOK — pre-filled from .env if present locally, blank on Streamlit Cloud
-    "groq_key":  os.getenv("GROQ_API_KEY", ""),
-    "judge_key": os.getenv("JUDGE_GROQ", ""),
+    "groq_key":   os.getenv("GROQ_API_KEY", ""),
+    "judge_key":  os.getenv("JUDGE_GROQ", ""),
+    "gemini_key": os.getenv("GEMINI_API_KEY", ""),
     # Pipeline state
     "enriched":    None,
     "scores":      {},
@@ -137,14 +143,28 @@ with st.sidebar:
         placeholder="gsk_… (falls back to GROQ_API_KEY)",
         help="Used for RAGAS evaluation (llama-3.1-8b-instant). Keeping it separate means eval runs never exhaust your main key.",
     )
+    gemini_input = st.text_input(
+        "GEMINI_API_KEY",
+        value=st.session_state.gemini_key,
+        type="password",
+        placeholder="AIza…",
+        help="Used for Gemini retrieval embeddings (gemini-embedding-2-preview). Free key at aistudio.google.com.",
+    )
 
-    st.session_state.groq_key  = groq_input
-    st.session_state.judge_key = judge_input or groq_input  # fallback if blank
+    st.session_state.groq_key   = groq_input
+    st.session_state.judge_key  = judge_input or groq_input  # fallback if blank
+    st.session_state.gemini_key = gemini_input
 
-    if st.session_state.groq_key:
+    keys_ready = st.session_state.groq_key and st.session_state.gemini_key
+    if keys_ready:
         st.success("✅ Keys loaded")
     else:
-        st.warning("Enter your GROQ_API_KEY to run the pipeline.")
+        missing = []
+        if not st.session_state.groq_key:
+            missing.append("GROQ_API_KEY")
+        if not st.session_state.gemini_key:
+            missing.append("GEMINI_API_KEY")
+        st.warning(f"Missing: {', '.join(missing)}")
 
     st.divider()
 
@@ -201,7 +221,7 @@ with tab_catalog:
         "that the RAG system retrieves from."
     )
 
-    retriever, catalog = get_retriever()
+    catalog = get_catalog()
     df_cat = pd.DataFrame(catalog)[["id", "category", "title", "content"]]
     df_cat.columns = ["ID", "Category", "Title", "Content"]
 
@@ -248,8 +268,8 @@ with tab_goldens:
 with tab_pipeline:
     st.subheader("Evaluation Pipeline")
 
-    if not st.session_state.groq_key:
-        st.error("⚠️  No GROQ_API_KEY — enter it in the sidebar to continue.")
+    if not st.session_state.groq_key or not st.session_state.gemini_key:
+        st.error("⚠️  GROQ_API_KEY and GEMINI_API_KEY are both required — enter them in the sidebar.")
         st.stop()
 
     # ── Phase 1 ───────────────────────────────────────────────────────────────
@@ -260,7 +280,10 @@ with tab_pipeline:
     )
 
     if st.button("▶ Run Phase 1 — Generate RAG Responses", type="primary"):
-        retriever, catalog = get_retriever()
+        if not st.session_state.gemini_key:
+            st.error("⚠️  GEMINI_API_KEY required for retrieval — enter it in the sidebar.")
+            st.stop()
+        retriever = get_retriever(st.session_state.gemini_key)
         generator = Generator(api_key=st.session_state.groq_key)
         goldens = load_goldens()
 
