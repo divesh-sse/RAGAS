@@ -30,7 +30,7 @@ from ragas.metrics.collections import (
 )
 
 GROQ_BASE_URL = "https://api.groq.com/openai/v1"
-JUDGE_MODEL = "llama-3.1-8b-instant"
+JUDGE_MODEL = "openai/gpt-oss-20b"
 
 # ── Timing constants ──────────────────────────────────────────────────────────
 SAMPLE_COOLDOWN = 25      # seconds between samples within one experiment
