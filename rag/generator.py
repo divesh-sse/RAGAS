@@ -3,7 +3,7 @@ from __future__ import annotations
 from openai import AsyncOpenAI
 
 GROQ_BASE_URL = "https://api.groq.com/openai/v1"
-DEFAULT_MODEL = "llama-3.3-70b-versatile"
+DEFAULT_MODEL = "openai/gpt-oss-20b"
 
 SYSTEM_PROMPT = """You are a helpful customer support assistant for TechNest, an online electronics store.
 Answer the customer's question using ONLY the information provided in the context below.
