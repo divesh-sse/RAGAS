@@ -1,0 +1,60 @@
+how to context precision 
+
+correct order    - reranking 
+
+-----------------------------------------
+
+context recall 
+
+correct chunks retreived    - 
+better chunking strategys,better retrieval  , metadata
+
+
+---------------
+how to increase faithfullnes 
+
+
+prompt engineering 
+
+
+---- 
+
+answer relevancy 
+
+prompt engineering
+
+
+------
+
+answer correctness 
+
+prompt eng 
+
+
+
+TOOL correctness 
+
+
+prompt engineering    , doc strings 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
